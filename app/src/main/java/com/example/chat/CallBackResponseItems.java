@@ -2,8 +2,8 @@ package com.example.chat;
 
 import java.util.List;
 
-public interface CallBackResponseItems {
-    void onSuccess(List<ItemModel> list);
+public interface CallBackResponseItems<T> {
+    void onSuccess(T list);
 
     void onFail(Throwable throwable);
 

@@ -73,33 +73,40 @@ public class LoginFragment extends Fragment {
             @Override
             public void onSuccess() {
 
-                getActivity().runOnUiThread(() -> {
-                    HomeFragment.name=binding.email.getText().toString().toString();
-                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
-                    Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
-                });
+                try {
+
+                    getActivity().runOnUiThread(() -> {
+                        HomeFragment.name=binding.email.getText().toString().toString();
+                        Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                    });
+                }catch (Exception e){}
 
             }
 
             @Override
             public void onFail(Throwable throwable) {
-                getActivity().runOnUiThread(() -> {
-                    binding.login.setEnabled(true);
-                    try {
-                        Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.getMessage();
-                        Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
+               try {
+                   getActivity().runOnUiThread(() -> {
+                       binding.login.setEnabled(true);
+                       try {
+                           Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
+                       } catch (JSONException e) {
+                           e.getMessage();
+                           Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                       }
+                   });
+               }catch (Exception e){}
             }
 
             @Override
             public void onNetworkFail(Throwable throwable) {
-                getActivity().runOnUiThread(() -> {
-                    binding.login.setEnabled(true);
-                    Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
-                });
+                try {
+                    getActivity().runOnUiThread(() -> {
+                        binding.login.setEnabled(true);
+                        Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                    });
+                }catch (Exception e){}
             }
         });
     }

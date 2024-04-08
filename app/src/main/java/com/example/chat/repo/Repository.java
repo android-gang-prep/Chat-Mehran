@@ -9,6 +9,8 @@ import com.example.chat.CallBackResponseBitmap;
 import com.example.chat.CallBackResponseItems;
 import com.example.chat.ItemModel;
 import com.example.chat.ListItemModel;
+import com.example.chat.ListLiveModel;
+import com.example.chat.LiveModel;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -17,6 +19,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,8 +60,33 @@ public class Repository {
             callBackResponse.onNetworkFail(new Throwable("Json Error"));
         }
     }
+    public void getLives(CallBackResponseItems<List<LiveModel>> callBackResponse){
 
-    public void getItems(CallBackResponseItems callBackResponse){
+        Request request = new Request.Builder()
+                .url("https://test-setare.s3.ir-tbz-sh1.arvanstorage.ir/profile_lives2.json?versionId=")
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                if (callBackResponse != null)
+                    callBackResponse.onNetworkFail(e);
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (callBackResponse != null)
+                    if (response.isSuccessful()){
+                        ListLiveModel listLiveModel = new Gson().fromJson(response.body().string(), ListLiveModel.class);
+                        callBackResponse.onSuccess(listLiveModel.getLives());
+                    }else
+                        callBackResponse.onFail(new Throwable(response.body().string()));
+            }
+        });
+    }
+    public void getItems(CallBackResponseItems<List<ItemModel>> callBackResponse){
 
         Request request = new Request.Builder()
                 .url("https://test-setare.s3.ir-tbz-sh1.arvanstorage.ir/wsi-lyon%2Ffavourites_avatars1.json?versionId=")

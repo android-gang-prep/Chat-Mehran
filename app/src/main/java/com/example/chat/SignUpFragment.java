@@ -56,32 +56,38 @@ public class SignUpFragment extends Fragment {
         Repository.getRepository().activeCode(binding.active.getText().toString().trim(), new CallBackResponse() {
             @Override
             public void onSuccess() {
-                getActivity().runOnUiThread(() -> {
-                    Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_homeFragment);
-                    Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
-                });
+              try {
+                  getActivity().runOnUiThread(() -> {
+                      Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_homeFragment);
+                      Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                  });
+              }catch (Exception e){}
                 Log.i("TAG", "onSuccess: ");
             }
 
             @Override
             public void onFail(Throwable throwable) {
-                getActivity().runOnUiThread(() -> {
-                    binding.signup.setEnabled(true);
-                    try {
-                        Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.getMessage();
-                        Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
+               try {
+                   getActivity().runOnUiThread(() -> {
+                       binding.signup.setEnabled(true);
+                       try {
+                           Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
+                       } catch (JSONException e) {
+                           e.getMessage();
+                           Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                       }
+                   });
+               }catch (Exception e){}
             }
 
             @Override
             public void onNetworkFail(Throwable throwable) {
-                getActivity().runOnUiThread(() -> {
-                    binding.signup.setEnabled(true);
-                    Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
-                });
+               try {
+                   getActivity().runOnUiThread(() -> {
+                       binding.signup.setEnabled(true);
+                       Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                   });
+               }catch (Exception e){}
                 Log.i("TAG", "onNetworkFail: " + throwable.getMessage());
             }
         });
@@ -147,6 +153,7 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onSuccess() {
                 String[] phone = getPhone(binding.phone.getText().toString().trim());
+            try {
                 getActivity().runOnUiThread(() -> {
                     HomeFragment.name = binding.name.getText().toString().toString();
 
@@ -155,30 +162,35 @@ public class SignUpFragment extends Fragment {
                     binding.activeL.setVisibility(View.VISIBLE);
                     binding.signup.setText("Activate Account");
                 });
+            }catch (Exception e){}
                 Repository.getRepository().sendCode(phone[0], phone[1], null);
 
             }
 
             @Override
             public void onFail(Throwable throwable) {
-                getActivity().runOnUiThread(() -> {
-                    binding.signup.setEnabled(true);
-                    try {
-                        Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.getMessage();
-                        Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
+              try {
+                  getActivity().runOnUiThread(() -> {
+                      binding.signup.setEnabled(true);
+                      try {
+                          Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
+                      } catch (JSONException e) {
+                          e.getMessage();
+                          Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                      }
+                  });
+              }catch (Exception e){}
             }
 
             @Override
             public void onNetworkFail(Throwable throwable) {
                 Log.i("TAG", "onNetworkFail: " + throwable.getMessage());
-                getActivity().runOnUiThread(() -> {
-                    binding.signup.setEnabled(true);
-                    Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
-                });
+               try {
+                   getActivity().runOnUiThread(() -> {
+                       binding.signup.setEnabled(true);
+                       Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
+                   });
+               }catch (Exception e){}
             }
         });
     }

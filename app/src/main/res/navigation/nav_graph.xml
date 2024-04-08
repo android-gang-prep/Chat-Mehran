@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.chat.SignUpFragment"
-        android:label="SignUpFragment" >
+        android:label="SignUpFragment">
         <action
             android:id="@+id/action_signUpFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/firstFragment"
         android:name="com.example.chat.FirstFragment"
-        android:label="fragment_first" >
+        android:label="fragment_first">
         <action
             android:id="@+id/action_firstFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
@@ -28,7 +28,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.chat.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -36,13 +36,28 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.chat.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_liveFragment"
+            app:destination="@id/liveFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+    </fragment>
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.example.chat.SplashFragment"
-        android:label="SplashFragment" >
+        android:label="SplashFragment">
         <action
             android:id="@+id/action_splashFragment_to_firstFragment"
+
             app:destination="@id/firstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/liveFragment"
+        android:name="com.example.chat.LiveFragment"
+        android:label="LiveFragment">
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 </navigation>

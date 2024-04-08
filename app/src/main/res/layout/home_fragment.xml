@@ -10,7 +10,7 @@
         android:id="@+id/imageView3"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="20sp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:src="@drawable/icon"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
         android:padding="10dp"
         android:textColorHint="#CDCDCD"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/recLives"
         app:layout_constraintWidth_percent="0.75" />
 
     <ImageView
@@ -69,8 +69,8 @@
         android:layout_height="wrap_content"
         android:text="Favourites"
         android:textColor="@color/white"
-        android:layout_marginStart="20sp"
-        android:layout_marginTop="20sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
@@ -85,5 +85,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/favourites" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recLives"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@
     android:id="@+id/back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#292F3F">
+    android:background="@color/background">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -39,7 +39,7 @@
         android:background="@drawable/edittext_back"
         android:hint="Search..."
         android:padding="10dp"
-        android:textColorHint="#CDCDCD"
+        android:textColorHint="@color/textColorHint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recLives"
         app:layout_constraintWidth_percent="0.75" />
@@ -81,6 +81,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:paddingHorizontal="10dp"
+        android:clipToPadding="false"
+        android:paddingVertical="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/favourites" />
@@ -88,12 +91,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recLives"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:paddingHorizontal="20dp"
         android:layout_marginTop="20dp"
         android:clipToPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

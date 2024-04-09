@@ -12,6 +12,8 @@
         android:label="SignUpFragment">
         <action
             android:id="@+id/action_signUpFragment_to_homeFragment"
+            app:popUpTo="@id/firstFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
@@ -31,6 +33,8 @@
         android:label="LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
+            app:popUpTo="@id/firstFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
@@ -49,7 +53,8 @@
         android:label="SplashFragment">
         <action
             android:id="@+id/action_splashFragment_to_firstFragment"
-
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/firstFragment" />
     </fragment>
     <fragment

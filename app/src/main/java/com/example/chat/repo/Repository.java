@@ -21,6 +21,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -110,30 +111,6 @@ public class Repository {
                         callBackResponse.onSuccess(listItemModel.getFavourites());
                     }else
                         callBackResponse.onFail(new Throwable(response.body().string()));
-            }
-        });
-    }
-    public void getBitmap(String url, CallBackResponseBitmap callBackResponseBitmap) {
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                if (callBackResponseBitmap != null)
-                    callBackResponseBitmap.onNetworkFail(e);
-
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (callBackResponseBitmap != null)
-                    if (response.isSuccessful())
-                        callBackResponseBitmap.onSuccess(BitmapFactory.decodeStream(response.body().byteStream()));
-                    else
-                        callBackResponseBitmap.onFail(new Throwable(response.body().string()));
             }
         });
     }

@@ -13,6 +13,7 @@ import androidx.viewbinding.ViewBinding;
 import com.example.chat.databinding.ItemBinding;
 import com.example.chat.databinding.ItemLiveBottomBinding;
 import com.example.chat.databinding.ItemLiveUpBinding;
+import com.example.chat.repo.LoadImage;
 import com.example.chat.repo.Repository;
 import com.google.android.material.card.MaterialCardView;
 
@@ -52,7 +53,7 @@ public class AdapterLive extends RecyclerView.Adapter<AdapterLive.ViewHolder> {
             holder.cardView.setStrokeColor(Color.parseColor("#b347ea"));
 
         if (holder.bitmap == null)
-            Repository.getRepository().getBitmap(list.get(position).getProfile_image(), new CallBackResponseBitmap() {
+            LoadImage.getImage(holder.imageView.getContext()).getBitmap(list.get(position).getProfile_image(), new CallBackResponseBitmap() {
                 @Override
                 public void onSuccess(Bitmap bitmap) {
                     holder.bitmap = bitmap;

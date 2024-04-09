@@ -37,7 +37,11 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.back.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+        binding.back.setOnClickListener(v -> {
+            try {
+                Navigation.findNavController(v).popBackStack();
+            }catch (Exception e){}
+        });
         binding.login.setOnClickListener(v -> Login());
     }
 
@@ -48,18 +52,18 @@ public class LoginFragment extends Fragment {
 
 
     private void Login() {
-        binding.email.setError(null);
-        binding.password.setError(null);
+        binding.emailL.setError(null);
+        binding.passwordL.setError(null);
 
         boolean signup = true;
         if (binding.email.getText().toString().trim().isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(binding.email.getText().toString().trim()).matches()) {
-            binding.email.setError("invalid email address");
+            binding.emailL.setError("invalid email address");
             signup = false;
         }
 
 
         if (binding.password.getText().toString().isEmpty() || binding.password.getText().toString().length() < 10) {
-            binding.password.setError("password should more then 10 digits");
+            binding.passwordL.setError("password should more then 10 digits");
             signup = false;
         }
 
@@ -68,7 +72,8 @@ public class LoginFragment extends Fragment {
             return;
 
         binding.login.setEnabled(false);
-
+        binding.login.setVisibility(View.INVISIBLE);
+        binding.progress.setVisibility(View.VISIBLE);
         Repository.getRepository().Login(binding.email.getText().toString().toString(), binding.password.getText().toString().toString(), new CallBackResponse() {
             @Override
             public void onSuccess() {
@@ -76,8 +81,12 @@ public class LoginFragment extends Fragment {
                 try {
 
                     getActivity().runOnUiThread(() -> {
+                        binding.login.setVisibility(View.VISIBLE);
+                        binding.progress.setVisibility(View.GONE);
                         HomeFragment.name=binding.email.getText().toString().toString();
-                        Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+                        try {
+                            Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+                        }catch (Exception e){}
                         Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                     });
                 }catch (Exception e){}
@@ -88,6 +97,9 @@ public class LoginFragment extends Fragment {
             public void onFail(Throwable throwable) {
                try {
                    getActivity().runOnUiThread(() -> {
+
+                       binding.login.setVisibility(View.VISIBLE);
+                       binding.progress.setVisibility(View.GONE);
                        binding.login.setEnabled(true);
                        try {
                            Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
@@ -103,6 +115,9 @@ public class LoginFragment extends Fragment {
             public void onNetworkFail(Throwable throwable) {
                 try {
                     getActivity().runOnUiThread(() -> {
+
+                        binding.login.setVisibility(View.VISIBLE);
+                        binding.progress.setVisibility(View.GONE);
                         binding.login.setEnabled(true);
                         Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
                     });

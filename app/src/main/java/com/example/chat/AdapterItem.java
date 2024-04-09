@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chat.databinding.ItemBinding;
+import com.example.chat.repo.LoadImage;
 import com.example.chat.repo.Repository;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class AdapterItem extends RecyclerView.Adapter<AdapterItem.ViewHolder> {
     public void onBindViewHolder(@NonNull AdapterItem.ViewHolder holder, int position) {
         holder.binding.title.setText(list.get(position).getName());
         if (holder.bitmap==null)
-        Repository.getRepository().getBitmap(list.get(position).getImage(), new CallBackResponseBitmap() {
+        LoadImage.getImage(holder.itemView.getContext()).getBitmap(list.get(position).getImage(), new CallBackResponseBitmap() {
             @Override
             public void onSuccess(Bitmap bitmap) {
                 holder.bitmap = bitmap;

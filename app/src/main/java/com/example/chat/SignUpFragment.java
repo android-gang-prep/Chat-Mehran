@@ -38,7 +38,11 @@ public class SignUpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.back.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+        binding.back.setOnClickListener(v -> {
+            try {
+                Navigation.findNavController(v).popBackStack();
+            }catch (Exception e){}
+        });
         binding.signup.setOnClickListener(v -> {
             if (binding.signup.getText().toString().trim().equals("Activate Account"))
                 active();
@@ -48,17 +52,20 @@ public class SignUpFragment extends Fragment {
 
     private void active() {
         if (binding.active.getText().toString().trim().length() < 4) {
-            binding.active.setError("Code is incorrect");
+            binding.activeI.setError("Code is incorrect");
             return;
         }
         binding.signup.setEnabled(false);
-
+        binding.signup.setVisibility(View.INVISIBLE);
+        binding.progress.setVisibility(View.VISIBLE);
         Repository.getRepository().activeCode(binding.active.getText().toString().trim(), new CallBackResponse() {
             @Override
             public void onSuccess() {
               try {
                   getActivity().runOnUiThread(() -> {
-                      Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_homeFragment);
+                      try {
+                          Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_homeFragment);
+                      }catch (Exception e){}
                       Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
                   });
               }catch (Exception e){}
@@ -69,6 +76,8 @@ public class SignUpFragment extends Fragment {
             public void onFail(Throwable throwable) {
                try {
                    getActivity().runOnUiThread(() -> {
+                       binding.signup.setVisibility(View.VISIBLE);
+                       binding.progress.setVisibility(View.GONE);
                        binding.signup.setEnabled(true);
                        try {
                            Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
@@ -84,6 +93,8 @@ public class SignUpFragment extends Fragment {
             public void onNetworkFail(Throwable throwable) {
                try {
                    getActivity().runOnUiThread(() -> {
+                       binding.signup.setVisibility(View.VISIBLE);
+                       binding.progress.setVisibility(View.GONE);
                        binding.signup.setEnabled(true);
                        Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
                    });
@@ -117,30 +128,30 @@ public class SignUpFragment extends Fragment {
     }
 
     private void SignUP() {
-        binding.email.setError(null);
-        binding.password.setError(null);
-        binding.name.setError(null);
-        binding.phone.setError(null);
+        binding.emailL.setError(null);
+        binding.passwordL.setError(null);
+        binding.nameL.setError(null);
+        binding.phoneL.setError(null);
 
         boolean signup = true;
         if (binding.email.getText().toString().trim().isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(binding.email.getText().toString().trim()).find()) {
-            binding.email.setError("invalid email address");
+            binding.emailL.setError("invalid email address");
             signup = false;
         }
 
 
         if (binding.password.getText().toString().isEmpty() || binding.password.getText().toString().length() < 10) {
-            binding.password.setError("password should more then 10 digits");
+            binding.passwordL.setError("password should more then 10 digits");
             signup = false;
         }
 
         if (binding.name.getText().toString().isEmpty() || binding.name.getText().toString().length() < 3) {
-            binding.name.setError("please fill name");
+            binding.nameL.setError("please fill name");
             signup = false;
         }
 
         if (binding.phone.getText().toString().trim().isEmpty() || !isPhoneNumber(binding.phone.getText().toString().trim())) {
-            binding.phone.setError("invalid phone number");
+            binding.phoneL.setError("invalid phone number");
             signup = false;
         }
 
@@ -149,6 +160,8 @@ public class SignUpFragment extends Fragment {
 
         binding.signup.setEnabled(false);
 
+        binding.signup.setVisibility(View.INVISIBLE);
+        binding.progress.setVisibility(View.VISIBLE);
         Repository.getRepository().Signup(binding.email.getText().toString().toString(), binding.name.getText().toString().toString(), binding.password.getText().toString().toString(), binding.phone.getText().toString().toString(), new CallBackResponse() {
             @Override
             public void onSuccess() {
@@ -161,9 +174,11 @@ public class SignUpFragment extends Fragment {
                     binding.linearLayout.setVisibility(View.GONE);
                     binding.activeL.setVisibility(View.VISIBLE);
                     binding.signup.setText("Activate Account");
+                    binding.signup.setVisibility(View.VISIBLE);
+                    binding.progress.setVisibility(View.GONE);
                 });
-            }catch (Exception e){}
                 Repository.getRepository().sendCode(phone[0], phone[1], null);
+            }catch (Exception e){}
 
             }
 
@@ -171,6 +186,9 @@ public class SignUpFragment extends Fragment {
             public void onFail(Throwable throwable) {
               try {
                   getActivity().runOnUiThread(() -> {
+
+                      binding.signup.setVisibility(View.VISIBLE);
+                      binding.progress.setVisibility(View.GONE);
                       binding.signup.setEnabled(true);
                       try {
                           Toast.makeText(getContext(), new JSONObject(throwable.getMessage()).getString("error"), Toast.LENGTH_SHORT).show();
@@ -187,6 +205,9 @@ public class SignUpFragment extends Fragment {
                 Log.i("TAG", "onNetworkFail: " + throwable.getMessage());
                try {
                    getActivity().runOnUiThread(() -> {
+
+                       binding.signup.setVisibility(View.VISIBLE);
+                       binding.progress.setVisibility(View.GONE);
                        binding.signup.setEnabled(true);
                        Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
                    });

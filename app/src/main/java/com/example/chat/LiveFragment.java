@@ -51,7 +51,11 @@ public class LiveFragment extends Fragment {
         binding.player.setUseController(false);
         player.prepare();
         player.play();
-        binding.close.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+        binding.close.setOnClickListener(v -> {
+            try {
+                Navigation.findNavController(v).popBackStack();
+            }catch (Exception e){}
+        });
 
     }
 

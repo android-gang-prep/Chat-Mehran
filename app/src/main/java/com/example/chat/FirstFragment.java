@@ -27,7 +27,15 @@ public class FirstFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.signup.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_firstFragment_to_signUpFragment));
-        binding.login.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_firstFragment_to_loginFragment));
+        binding.signup.setOnClickListener(v -> {
+            try {
+                Navigation.findNavController(v).navigate(R.id.action_firstFragment_to_signUpFragment);
+            }catch (Exception e){}
+        });
+        binding.login.setOnClickListener(v -> {
+            try {
+                Navigation.findNavController(v).navigate(R.id.action_firstFragment_to_loginFragment);
+            }catch (Exception e){}
+        });
     }
 }

@@ -36,11 +36,8 @@ public class Repository {
 
     private static Repository repository;
 
-    public Repository() {
-
+    private Repository() {
         client = new OkHttpClient();
-
-
     }
 
     public static Repository getRepository() {

@@ -21,9 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chat.databinding.FirstBinding;
 import com.example.chat.databinding.HomeFragmentBinding;
 import com.example.chat.repo.Repository;
+import com.example.chat.repo.SocketClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -35,12 +41,15 @@ public class HomeFragment extends Fragment {
     private AdapterLive adapterLive;
     private AdapterItem adapterItem;
 
+    private AdapterUsers adapterUsers;
+    private List<UserModel> userModels;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         liveModels = new ArrayList<>();
         itemModels = new ArrayList<>();
-
+        userModels = new ArrayList<>();
 
     }
 
@@ -63,8 +72,13 @@ public class HomeFragment extends Fragment {
             try {
                 Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_liveFragment, bundle);
 
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         });
+        adapterUsers = new AdapterUsers(userModels);
+        binding.users.setAdapter(adapterUsers);
+        binding.users.setLayoutManager(new LinearLayoutManager(getContext()));
+
         binding.recLives.setAdapter(adapterLive);
         binding.recLives.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
@@ -80,7 +94,8 @@ public class HomeFragment extends Fragment {
         binding.back.setOnClickListener(v -> {
             try {
                 Navigation.findNavController(v).popBackStack();
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         });
 
     }
@@ -88,7 +103,44 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity) getActivity()).socketClient.addListener(callBack);
+        try {
+            ((MainActivity) getActivity()).socketClient.setOnline();
+        } catch (JSONException e) {
+            e.getMessage();
+        }
+
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    private SocketClient.CallBack callBack = message -> {
+
+        userModels.clear();
+        Log.i("TAG", "message : " + message);
+        try {
+            JSONObject jsonObject = new JSONObject(message);
+            if (jsonObject.getString("type").equals("users")) {
+                JSONArray jsonArray = jsonObject.getJSONArray("content");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject user = jsonArray.getJSONObject(i);
+                    userModels.add(new UserModel(user.getString("name"), user.getString("status").equals("1")));
+                }
+            }
+        } catch (JSONException e) {
+            Log.i("TAG", "message : " + e.getMessage());
+
+            e.getMessage();
+        }
+        try {
+            requireActivity().runOnUiThread(() ->adapterUsers.notifyDataSetChanged());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    };
 
     private void getItems() {
         if (!itemModels.isEmpty())
@@ -101,7 +153,7 @@ public class HomeFragment extends Fragment {
                         itemModels.clear();
                         itemModels.addAll(list);
                         adapterItem.notifyDataSetChanged();
-                        });
+                    });
                 } catch (Exception e) {
                 }
             }

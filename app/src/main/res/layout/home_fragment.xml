@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="Mehran"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         android:textSize="25sp"
 
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Favourites"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:textSize="25sp"
@@ -99,6 +99,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/users"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="10dp"
+        android:clipToPadding="false"
+        android:paddingVertical="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rec" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

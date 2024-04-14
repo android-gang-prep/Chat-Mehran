@@ -64,6 +64,7 @@ public class SignUpFragment extends Fragment {
               try {
                   getActivity().runOnUiThread(() -> {
                       try {
+                          ((MainActivity) getActivity()).socketClient.start(binding.ip.getText().toString().trim(), binding.email.getText().toString().trim());
                           Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_homeFragment);
                       }catch (Exception e){}
                       Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
@@ -154,7 +155,10 @@ public class SignUpFragment extends Fragment {
             binding.phoneL.setError("invalid phone number");
             signup = false;
         }
-
+        if (binding.ip.getText().toString().trim().isEmpty() || !Patterns.IP_ADDRESS.matcher(binding.ip.getText().toString().trim()).matches()) {
+            binding.ipL.setError("ip address is invalid");
+            signup = false;
+        }
         if (!signup)
             return;
 

@@ -6,6 +6,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +52,11 @@ public class HomeFragment extends Fragment {
         liveModels = new ArrayList<>();
         itemModels = new ArrayList<>();
         userModels = new ArrayList<>();
-
+        adapterUsers = new AdapterUsers(userModels, userModel -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("name", userModel.getName());
+            Navigation.findNavController(getView()).navigate(R.id.action_homeFragment_to_chatFragment, bundle);
+        });
     }
 
     @Nullable
@@ -75,7 +81,7 @@ public class HomeFragment extends Fragment {
             } catch (Exception e) {
             }
         });
-        adapterUsers = new AdapterUsers(userModels);
+
         binding.users.setAdapter(adapterUsers);
         binding.users.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -98,14 +104,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).socketClient.addListener(callBack);
+        App.getApp().socketClient.addListener(callBack);
         try {
-            ((MainActivity) getActivity()).socketClient.setOnline();
+            App.getApp().socketClient.setOnline();
         } catch (JSONException e) {
             e.getMessage();
         }
@@ -115,31 +123,40 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        App.getApp().socketClient.removeListener(callBack);
     }
 
     private SocketClient.CallBack callBack = message -> {
 
-        userModels.clear();
-        Log.i("TAG", "message : " + message);
+        Log.i("TAG", "message :2 " + message);
         try {
             JSONObject jsonObject = new JSONObject(message);
             if (jsonObject.getString("type").equals("users")) {
+                userModels.clear();
                 JSONArray jsonArray = jsonObject.getJSONArray("content");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject user = jsonArray.getJSONObject(i);
-                    userModels.add(new UserModel(user.getString("name"), user.getString("status").equals("1")));
+                    if (!user.getString("name").equals(HomeFragment.name))
+                        userModels.add(new UserModel(user.getString("name"), user.getString("status").equals("1")));
                 }
+
+                try {
+                    getActivity().runOnUiThread(() -> {
+                        adapterUsers.notifyDataSetChanged();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
             }
         } catch (JSONException e) {
             Log.i("TAG", "message : " + e.getMessage());
 
-            e.getMessage();
-        }
-        try {
-            requireActivity().runOnUiThread(() ->adapterUsers.notifyDataSetChanged());
-        } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     };
 
     private void getItems() {

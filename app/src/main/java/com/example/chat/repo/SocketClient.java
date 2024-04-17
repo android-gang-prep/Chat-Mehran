@@ -2,6 +2,11 @@ package com.example.chat.repo;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Base64;
+
+import com.example.chat.App;
+import com.example.chat.HomeFragment;
+import com.example.chat.MessageModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,13 +28,13 @@ public class SocketClient {
         void onMessage(String message);
     }
 
-    private Socket socket;
+    public Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
     private final List<CallBack> callBacks;
     private final Handler uiHandler;
-    private String email;
-    private String ip;
+    public String email;
+    public String ip;
 
     private ExecutorService executorService;
 
@@ -52,10 +58,6 @@ public class SocketClient {
     public void start(String ip, String email) {
         this.email = email;
         if (socket != null) {
-            if (!this.ip.equals(ip)) {
-                stop();
-                start(ip, email);
-            }
             return;
         }
         this.ip = ip;
@@ -128,8 +130,67 @@ public class SocketClient {
 
     }
 
+    public void sendImage(String from, String to, byte[] bytes) {
+        executorService.execute(() -> {
+            int size = bytes.length / 4096;
+            long id = System.currentTimeMillis();
+            if (size * 4096 > bytes.length)
+                size++;
+            for (int i = 0; i < size; i++) {
+                byte[] newBytes;
+                String step;
+                if (i == size - 1) {
+                    step = "end";
+                    newBytes = Arrays.copyOfRange(bytes, i * 4096, bytes.length);
+                } else {
+                    step = String.valueOf(i + 1);
+                    newBytes = Arrays.copyOfRange(bytes, i * 4096, (i * 4096) + 4096);
+                }
+                String base64 = Base64.encodeToString(newBytes, Base64.DEFAULT);
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("name", from);
+                    jsonObject.put("to", to);
+                    jsonObject.put("content", base64);
+                    jsonObject.put("step", step);
+                    jsonObject.put("id", String.valueOf(id));
+                    jsonObject.put("type", "image");
+                    sendMessage(jsonObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
+    public void sendMessage(MessageModel messageModel) {
+        executorService.execute(() -> {
+            if (dataOutputStream != null)
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("name", messageModel.getName());
+                    jsonObject.put("to", messageModel.getTo());
+                    jsonObject.put("content", messageModel.getContent());
+                    jsonObject.put("type", "message");
+                    dataOutputStream.writeUTF(jsonObject.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+        });
+
+    }
+
     public void stop() {
-     /*   executorService.execute(() -> {
+        executorService.execute(() -> {
             try {
                 if (socket == null)
                     return;
@@ -141,9 +202,7 @@ public class SocketClient {
                 e.printStackTrace();
             }
             executorService.shutdown();
-            executorService = Executors.newCachedThreadPool();
-
-        });*/
+        });
 
     }
 }

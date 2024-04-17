@@ -8,4 +8,6 @@
     <color name="edittext_background">#1f232f</color>
     <color name="textColorHint">#CDCDCD</color>
     <color name="line_color">#56FFFFFF</color>
+    <color name="background_my_massage">#272A35</color>
+    <color name="background_massage">#373E4E</color>
 </resources>

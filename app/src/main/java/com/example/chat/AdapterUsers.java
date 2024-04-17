@@ -15,9 +15,15 @@ import java.util.List;
 public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.ViewHolder> {
 
     List<UserModel> list;
+    CallBackUser callBackUser;
 
-    public AdapterUsers(List<UserModel> list) {
+    public AdapterUsers(List<UserModel> list, CallBackUser callBackUser) {
         this.list = list;
+        this.callBackUser = callBackUser;
+    }
+
+    public interface CallBackUser {
+        void onClick(UserModel userModel);
     }
 
     @NonNull
@@ -31,8 +37,8 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull AdapterUsers.ViewHolder holder, int position) {
         holder.binding.email.setText(list.get(position).getName());
-        holder.binding.status.setImageResource(list.get(position).isStatus()?R.drawable.online:R.drawable.offline);
-
+        holder.binding.status.setImageResource(list.get(position).isStatus() ? R.drawable.online : R.drawable.offline);
+        holder.itemView.setOnClickListener(v -> callBackUser.onClick(list.get(position)));
     }
 
     @Override

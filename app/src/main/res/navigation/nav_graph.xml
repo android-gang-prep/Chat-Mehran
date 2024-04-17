@@ -46,6 +46,9 @@
             app:destination="@id/liveFragment"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_homeFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -63,6 +66,14 @@
         android:label="LiveFragment">
         <argument
             android:name="url"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.chat.ChatFragment"
+        android:label="ChatFragment" >
+        <argument
+            android:name="name"
             app:argType="string" />
     </fragment>
 </navigation>

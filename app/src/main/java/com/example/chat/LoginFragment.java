@@ -83,7 +83,7 @@ public class LoginFragment extends Fragment {
                         binding.progress.setVisibility(View.GONE);
                         HomeFragment.name = binding.email.getText().toString().toString();
                         try {
-                            ((MainActivity) getActivity()).socketClient.start(binding.ip.getText().toString().trim(), binding.email.getText().toString().trim());
+                            App.getApp().socketClient.start(binding.ip.getText().toString().trim(), binding.email.getText().toString().trim());
                             Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
 
                         } catch (Exception e) {

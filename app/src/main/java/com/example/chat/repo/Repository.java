@@ -58,7 +58,8 @@ public class Repository {
             callBackResponse.onNetworkFail(new Throwable("Json Error"));
         }
     }
-    public void getLives(CallBackResponseItems<List<LiveModel>> callBackResponse){
+
+    public void getLives(CallBackResponseItems<List<LiveModel>> callBackResponse) {
 
         Request request = new Request.Builder()
                 .url("https://test-setare.s3.ir-tbz-sh1.arvanstorage.ir/profile_lives2.json?versionId=")
@@ -76,15 +77,16 @@ public class Repository {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (callBackResponse != null)
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         ListLiveModel listLiveModel = new Gson().fromJson(response.body().string(), ListLiveModel.class);
                         callBackResponse.onSuccess(listLiveModel.getLives());
-                    }else
+                    } else
                         callBackResponse.onFail(new Throwable(response.body().string()));
             }
         });
     }
-    public void getItems(CallBackResponseItems<List<ItemModel>> callBackResponse){
+
+    public void getItems(CallBackResponseItems<List<ItemModel>> callBackResponse) {
 
         Request request = new Request.Builder()
                 .url("https://test-setare.s3.ir-tbz-sh1.arvanstorage.ir/wsi-lyon%2Ffavourites_avatars1.json?versionId=")
@@ -102,11 +104,11 @@ public class Repository {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (callBackResponse != null)
-                    if (response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         ListItemModel listItemModel = new Gson().fromJson(response.body().string(), ListItemModel.class);
 
                         callBackResponse.onSuccess(listItemModel.getFavourites());
-                    }else
+                    } else
                         callBackResponse.onFail(new Throwable(response.body().string()));
             }
         });

@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private ActivityMainBinding binding;
     Sensor sensor;
     SensorManager sensorManager;
-    public SocketClient socketClient;
+
+    private boolean start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +52,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        socketClient = new SocketClient();
+        if (!start) {
+            Log.i("TAG", "onCreate: ");
+            start = true;
+
+        }
     }
+
+
+  /*  public void newServer() {
+        if (socketClient.socket == null)
+            return;
+
+        String email = socketClient.email;
+        String ip = socketClient.ip;
+        socketClient.stop();
+        socketClient = new SocketClient();
+        socketClient.start(email, ip);
+    }*/
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -64,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        theme(event.values[0] <= 500);
+        theme(event.values[0] <= 200);
 
     }
 
@@ -82,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onResume() {
         super.onResume();
         try {
-            socketClient.setOnline();
+            App.getApp().socketClient.setOnline();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -93,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onPause() {
         super.onPause();
         try {
-            socketClient.setOffline();
+            App.getApp().socketClient.setOffline();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -103,6 +120,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        socketClient.stop();
+        //  socketClient.stop();
     }
 }

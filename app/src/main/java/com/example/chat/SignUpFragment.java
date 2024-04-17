@@ -64,7 +64,7 @@ public class SignUpFragment extends Fragment {
               try {
                   getActivity().runOnUiThread(() -> {
                       try {
-                          ((MainActivity) getActivity()).socketClient.start(binding.ip.getText().toString().trim(), binding.email.getText().toString().trim());
+                          App.getApp().socketClient.start(binding.ip.getText().toString().trim(), binding.email.getText().toString().trim());
                           Navigation.findNavController(getView()).navigate(R.id.action_signUpFragment_to_homeFragment);
                       }catch (Exception e){}
                       Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
